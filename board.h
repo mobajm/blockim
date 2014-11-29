@@ -1,4 +1,4 @@
-/* square.h */
+/* board.h */
 /* Copyright 2013 */
 /* Mustapha Aouimar <stephano.spirit@gmail.com> */
 /* Moncef <mob> Baazet <mob.ajm@gmail.com> */
@@ -30,42 +30,20 @@
 /* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE */
 /* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-#ifndef _SQUARE_TMP_H_
-#define _SQUARE_TMP_H_
+#ifndef _BOARD_H_
+#define _BOARD_H_
 
-/* #include "shape.h" */
+#include "square.h"
+#include "shape.h"
 
-typedef enum {
-  BRDR_NONE = 0,
-  BRDR_U = 1,
-  BRDR_D = 2,
-  BRDR_L = 4,
-  BRDR_R = 8
-} border_t;
+#define BRD_NB_SQRS 20
+typedef struct board_s {
+  square_t* sqrs[BRD_NB_SQRS][BRD_NB_SQRS];
+  int w, h; /* Width and height of the board, in squares */
+} board_t;
 
-typedef enum { VOID = 0, BLUE, YELLOW, RED, GREEN, GRAY, NB_COLORS } color_t;
+struct player_t;
+board_t* board_init(void);
+int board_place_shape(board_t*, shape_t*, int, int, struct player_t**, int);
 
-/* Possible transformations on squares and shapes */
-typedef enum transform_e {
-  REFLECT_V,
-  REFLECT_H,
-  NB_TRANSFORMS
-} transform_t;
-
-struct shape_t;
-typedef struct square_s {
-  /* A square can be linked to the shape
-     he is part of. */
-  struct shape_t* sh;
-  color_t color;
-  border_t borders;
-} square_t;
-
-square_t* square_init(void);
-square_t* square_create(border_t, color_t, struct shape_t*);
-void square_free(square_t*);
-
-border_t borders_img(border_t, transform_t);
-
-#endif /* _SQUARE_TMP_H_ */
-
+#endif /* _BOARD_H_ */

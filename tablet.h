@@ -1,4 +1,4 @@
-/* square.h */
+/* tablet.h */
 /* Copyright 2013 */
 /* Mustapha Aouimar <stephano.spirit@gmail.com> */
 /* Moncef <mob> Baazet <mob.ajm@gmail.com> */
@@ -30,42 +30,27 @@
 /* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE */
 /* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-#ifndef _SQUARE_TMP_H_
-#define _SQUARE_TMP_H_
+#ifndef _TABLET_H_
+#define _TABLET_H_
 
-/* #include "shape.h" */
+#include "square.h"
+#include "shape.h"
 
-typedef enum {
-  BRDR_NONE = 0,
-  BRDR_U = 1,
-  BRDR_D = 2,
-  BRDR_L = 4,
-  BRDR_R = 8
-} border_t;
+#define TBLT_SIZE 13
+#define NB_TABLETS 4
 
-typedef enum { VOID = 0, BLUE, YELLOW, RED, GREEN, GRAY, NB_COLORS } color_t;
+/* A spot on the tablet */
+typedef struct tablet_spot_s {
+  int x;
+  int y;
+} tablet_spot_t;
 
-/* Possible transformations on squares and shapes */
-typedef enum transform_e {
-  REFLECT_V,
-  REFLECT_H,
-  NB_TRANSFORMS
-} transform_t;
+typedef struct tablet_s {
+  square_t*** sqrs;
+} tablet_t;
 
-struct shape_t;
-typedef struct square_s {
-  /* A square can be linked to the shape
-     he is part of. */
-  struct shape_t* sh;
-  color_t color;
-  border_t borders;
-} square_t;
+tablet_t** tablets_build(int***);
+void tablet_place_shape(tablet_t*, shape_t*);
 
-square_t* square_init(void);
-square_t* square_create(border_t, color_t, struct shape_t*);
-void square_free(square_t*);
-
-border_t borders_img(border_t, transform_t);
-
-#endif /* _SQUARE_TMP_H_ */
+#endif /* _TABLET_H_ */
 

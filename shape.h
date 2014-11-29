@@ -1,4 +1,4 @@
-/* square.h */
+/* shape.h */
 /* Copyright 2013 */
 /* Mustapha Aouimar <stephano.spirit@gmail.com> */
 /* Moncef <mob> Baazet <mob.ajm@gmail.com> */
@@ -30,42 +30,66 @@
 /* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE */
 /* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-#ifndef _SQUARE_TMP_H_
-#define _SQUARE_TMP_H_
+#ifndef _SHAPE_H_
+#define _SHAPE_H_
 
-/* #include "shape.h" */
+#include "square.h"
 
+/* This is a queue of squares. Each square "nows" where its place
+   relatively to the first square read when building the shape
+   (left to right, top to bottom traversal). */
+typedef struct sqrs_queue_s {
+  square_t* sq;
+  char dx, dy;
+  struct sqrs_queue_s* next;
+} sqrs_queue_t;
+
+/* Each shape nows where its first square is to be placed
+   on the matrix representing a tablet. */
+typedef struct shape_t {
+  sqrs_queue_t* head;
+  sqrs_queue_t* last;
+  char tbl_x, tbl_y;
+  int **sh_tab;
+  int nb_sqrs;
+} shape_t;
+
+/* Kinds of shapes */
 typedef enum {
-  BRDR_NONE = 0,
-  BRDR_U = 1,
-  BRDR_D = 2,
-  BRDR_L = 4,
-  BRDR_R = 8
-} border_t;
+  BigI = 0,
+  ShortU,
+  Gun,
+  BigL,
+  OneLongLegZ,
+  EvenL,
+  Square,
+  BigW,
+  ShortI,
+  OneSquare,
+  LongZ,
+  WeirdT,
+  ShortZ,
+  Plus,
+  NormalL,
+  TwoSquares,
+  NormalT,
+  ShortGun,
+  ShortT,
+  MediumI,
+  Step,
+  NB_KINDS
+} shape_kind_t;
 
-typedef enum { VOID = 0, BLUE, YELLOW, RED, GREEN, GRAY, NB_COLORS } color_t;
+#define SHAPE_SIZE 5
 
-/* Possible transformations on squares and shapes */
-typedef enum transform_e {
-  REFLECT_V,
-  REFLECT_H,
-  NB_TRANSFORMS
-} transform_t;
+shape_t** shapes_build(int***, color_t);
+shape_t* shape_build_from_array(int**, int, int, color_t);
+int*** shapes_read(void);
+shape_t* shape_reflect(shape_t*, transform_t, color_t);
+int shape_max_dx_gen(shape_t*);
+int shape_max_dy(shape_t*);
+int shape_min_dx(shape_t*);
+int shape_min_dy(shape_t*);
 
-struct shape_t;
-typedef struct square_s {
-  /* A square can be linked to the shape
-     he is part of. */
-  struct shape_t* sh;
-  color_t color;
-  border_t borders;
-} square_t;
-
-square_t* square_init(void);
-square_t* square_create(border_t, color_t, struct shape_t*);
-void square_free(square_t*);
-
-border_t borders_img(border_t, transform_t);
-
-#endif /* _SQUARE_TMP_H_ */
+#endif /* _SHAPE_H_ */
 
